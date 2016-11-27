@@ -2,7 +2,6 @@ package ru.mail.polis.bench;
 
 import java.util.concurrent.TimeUnit;
 
-//import jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Level;
@@ -17,29 +16,29 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import ru.mail.polis.sort.BubbleSort;
 import ru.mail.polis.sort.Helper;
+import ru.mail.polis.sort.QuickRandomPartsSort;
 
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MICROSECONDS)
-public class BubbleSortBench {
-
+public class QuickRandomPartsSortBench {
     private int[] a;
 
     @Setup(value = Level.Invocation)
     public void setUpInvocation() {
-        a = Helper.gen(1000);
+        a = Helper.gen(100000);
+        //a = Helper.sortArray(100000); // best
     }
 
     @Benchmark
-    public void measureBubbleSort(Blackhole bh) {
-        bh.consume(BubbleSort.sort(a));
+    public void measureQuickRand3PartSort(Blackhole bh) {
+        bh.consume(QuickRandomPartsSort.sort(a));
     }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BubbleSortBench.class.getSimpleName())
+                .include(QuickRandomPartsSortBench.class.getSimpleName())
                 .warmupIterations(5)
                 .measurementIterations(5)
                 .forks(1)
@@ -47,4 +46,5 @@ public class BubbleSortBench {
 
         new Runner(opt).run();
     }
+
 }
